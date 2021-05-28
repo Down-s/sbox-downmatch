@@ -1,0 +1,24 @@
+{
+		"name": "downmatch",
+		"version": "1.0",
+		"sharedassets": "*.*",
+		
+		"depends": 
+		[
+			"base",
+			"citizen",
+			"rust"
+		],
+
+		//
+		// Addons can contain multiple addons, describe them here
+		//
+		"gamemodes":
+		[
+				{
+						"name": "downmatch",
+						"title": "Downmatch",
+						"description": "Down's cool deathmatch gamemode, subject to rename"
+				}
+		]
+}
