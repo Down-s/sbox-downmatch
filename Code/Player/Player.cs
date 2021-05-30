@@ -2,6 +2,9 @@ using Sandbox;
 
 partial class DownmatchPlayer : Player
 {
+	[Net]
+	public int Kills { get; set; } = 0;
+
 	public float Armor { get; set; } = 100;
 
 	private DamageInfo LastDamage;
@@ -48,6 +51,13 @@ partial class DownmatchPlayer : Player
 	{
 		base.OnKilled();
 
+		var Attacker = LastDamage.Attacker as DownmatchPlayer;
+
+		if (Attacker != null && Attacker != this)
+		{
+			Attacker.Kills++;
+		}
+
 		BecomeRagdollOnClient( Velocity, LastDamage.Flags, LastDamage.Position, LastDamage.Force, GetHitboxBone( LastDamage.HitboxIndex ) );
 		Camera = new SpectateRagdollCamera();
 		Controller = null;
@@ -55,7 +65,6 @@ partial class DownmatchPlayer : Player
 		EnableAllCollisions = false;
 		EnableDrawing = false;
 
-		Inventory.DropActive();
 		Inventory.DeleteContents();
 	}
 
