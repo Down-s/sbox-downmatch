@@ -4,12 +4,13 @@ using Sandbox;
 class LaserGun : DMWeapon
 {
 	private Particles Beam;
+	private Particles HitEffect;
 	private float BeamTime = 0.0f;
 
 	static SoundEvent ShootSound = new( "sounds/weapons/lasergun/shoot.vsnd" )
 	{
 		Volume = 1,
-		DistanceMax = 500.0f
+		DistanceMax = 2048.0f
 	};
 
 	public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
@@ -27,6 +28,8 @@ class LaserGun : DMWeapon
 
 		if (Beam != null && Time.Now > BeamTime + 0.075f)
 		{
+			HitEffect.Destroy(true);
+
 			Beam.Destroy(true);
 			Beam = null;
 		}
@@ -36,14 +39,14 @@ class LaserGun : DMWeapon
 	{
 		base.AttackPrimary();
 
-		TraceResult tr = Trace.Ray(Owner.EyePos, Owner.EyePos + (Owner.EyeRot.Forward * 2000)).Ignore(Owner).Run();
+		TraceResult tr = Trace.Ray(Owner.EyePos, Owner.EyePos + (Owner.EyeRot.Forward * 4096)).Radius(5).Ignore(Owner).Run();
 		
-		var freezeEffect = Particles.Create( "particles/physgun_freeze.vpcf" );
-		freezeEffect.SetPos( 0, tr.EndPos );
+		HitEffect = Particles.Create( "particles/lasers/laser-start.vpcf" );
+		HitEffect.SetPos( 0, tr.EndPos );
 
 		if (Beam == null)
 		{
-			Beam = Particles.Create( "particles/physgun_beam.vpcf", tr.EndPos );
+			Beam = Particles.Create( "particles/lasers/laser-beam.vpcf", tr.EndPos );
 			Beam.SetEntityAttachment( 0, EffectEntity, "muzzle", true );
 			Beam.SetPos( 1, tr.EndPos );
 			BeamTime = Time.Now;
