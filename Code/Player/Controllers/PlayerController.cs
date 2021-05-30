@@ -23,9 +23,23 @@ public class PlayerController : WalkController
 		BodyGirth = 32.0f;
 		BodyHeight = 72.0f;
 		EyeHeight = 64.0f;
-		Gravity = 400.0f;
+		Gravity = 650.0f;
 		AirControl = 100.0f;
 		Swimming = false;
 		AutoJump = true;
+	}
+
+	public override void Simulate()
+	{
+		if (Duck.IsActive)
+		{
+			GroundFriction = 0.75f;
+		}
+		else
+		{
+			GroundFriction = 10.0f;
+		}
+
+		base.Simulate();
 	}
 }
