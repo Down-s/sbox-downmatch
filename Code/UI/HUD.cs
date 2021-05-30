@@ -11,6 +11,7 @@ public partial class HUD : HudEntity<RootPanel>
 		RootPanel.StyleSheet.Load("/ui/HUD.scss");
 
 		RootPanel.AddChild<HUDContainer>();
+		RootPanel.AddChild<ScoreUI>();
 		RootPanel.AddChild<CrosshairPanel>();
 		RootPanel.AddChild<HUDContainer>();
 		RootPanel.AddChild<KillFeed>();

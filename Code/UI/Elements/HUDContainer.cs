@@ -7,6 +7,5 @@ public class HUDContainer : Panel
 	public HUDContainer()
 	{
 		AddChild<Health>();
-		AddChild<Armor>();
 	}
 }
