@@ -5,11 +5,16 @@ class LaserGun : DMWeapon
 {
 	private Particles Beam;
 	private Particles HitEffect;
-	private float BeamTime = 0.0f;
+	private float NextHit = 0.0f;
+
+	public LaserGun()
+	{
+		Damage = 20.0f;
+	}
 
 	static SoundEvent ShootSound = new( "sounds/weapons/lasergun/shoot.vsnd" )
 	{
-		Volume = 1,
+		Volume = 0.65f,
 		DistanceMax = 2048.0f
 	};
 
@@ -22,20 +27,59 @@ class LaserGun : DMWeapon
 		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 	}
 
+	void CheckLaser()
+	{
+		if (Owner.Input.Down(InputButton.Attack1))
+		{
+			TraceResult tr = Trace.Ray(Owner.EyePos, Owner.EyePos + (Owner.EyeRot.Forward * 4096)).Radius(5).Ignore(Owner).Run();
+
+			if (Beam == null)
+			{
+				if (IsClient)
+				{
+					var CrPanel = CrosshairPanel as CrosshairPanel;
+					CrPanel.Crosshair.OnEvent("onattack");
+				}
+
+				Beam = Particles.Create( "particles/lasers/laser-beam.vpcf", tr.EndPos );
+				Beam.SetEntityAttachment( 0, EffectEntity, "muzzle", true );
+			}
+
+			Beam.SetPos( 1, tr.EndPos );
+
+			if (Time.Now > NextHit)
+			{
+				PlaySound(ShootSound.Name);
+				Shoot(tr);
+				NextHit = Time.Now + 0.1f;
+			}
+		}
+		else
+		{
+			if (Beam != null)
+			{
+				Beam.Destroy(true);
+				Beam = null;
+			}
+		}
+	}
+
 	public override void Simulate(Client pl)
 	{
 		base.Simulate(pl);
 
-		if (Beam != null && Time.Now > BeamTime + 0.075f)
+		CheckLaser();
+
+		/*if (Beam != null && Time.Now > BeamTime + 0.075f)
 		{
 			HitEffect.Destroy(true);
 
 			Beam.Destroy(true);
 			Beam = null;
-		}
+		}*/
 	}
 
-	public override void AttackPrimary()
+	/*public override void AttackPrimary()
 	{
 		base.AttackPrimary();
 
@@ -61,5 +105,5 @@ class LaserGun : DMWeapon
 
 		ViewModelEntity?.SetAnimBool("fire", true);
 		PlaySound(ShootSound.Name);
-	}
+	}*/
 }

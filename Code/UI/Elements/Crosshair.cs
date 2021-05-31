@@ -13,7 +13,7 @@ public class CrosshairPanel : Panel
 
 public class Crosshair : Panel
 {
-	int FireCount;
+	int FireCount = 0;
 
 	public Crosshair()
 	{
