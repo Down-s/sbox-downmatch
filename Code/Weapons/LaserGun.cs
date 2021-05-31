@@ -59,7 +59,7 @@ class LaserGun : DMWeapon
 
 		Shoot(tr);
 
-		ViewModelEntity?.SetAnimParam( "fire", true );
+		ViewModelEntity?.SetAnimBool("fire", true);
 		PlaySound(ShootSound.Name);
 	}
 }
