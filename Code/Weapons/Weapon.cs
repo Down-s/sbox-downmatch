@@ -14,7 +14,11 @@ partial class DMWeapon : BaseWeapon
 
 	public void Shoot(TraceResult tr)
 	{
-		if ( !tr.Entity.IsValid() ) return;
+		if (IsClient)
+		{
+			var CrPanel = CrosshairPanel as CrosshairPanel;
+			CrPanel.Crosshair.OnEvent("onattack");
+		}
 
 		using (Prediction.Off())
 		{
@@ -30,5 +34,13 @@ partial class DMWeapon : BaseWeapon
 				PlaySound(HitSound.Name);
 			}
 		}
+	}
+
+	public override void CreateHudElements()
+	{
+		if ( Local.Hud == null ) return;
+
+		CrosshairPanel = new CrosshairPanel();
+		CrosshairPanel.Parent = Local.Hud;
 	}
 }
