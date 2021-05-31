@@ -3,14 +3,18 @@ using Sandbox.UI;
 
 public class CrosshairPanel : Panel
 {
+	public Panel Crosshair;
+
 	public CrosshairPanel()
 	{
-		AddChild<Crosshair>();
+		Crosshair = AddChild<Crosshair>();
 	}
 }
 
 public class Crosshair : Panel
 {
+	int FireCount;
+
 	public Crosshair()
 	{
 		
@@ -18,13 +22,9 @@ public class Crosshair : Panel
 
 	public override void OnEvent(string EventName)
 	{
-		Log.Info(EventName);
-
 		if (EventName == "onattack")
 		{
-			Log.Info("TestEvent");
-			AddClass("shoot");
-			return;
+			FireCount += 10;
 		}
 
 		base.OnEvent(EventName);
@@ -46,5 +46,10 @@ public class Crosshair : Panel
 		{
 			SetClass("player", false);
 		}
+
+		SetClass("fire", FireCount > 0);
+
+		if (FireCount > 0)
+			FireCount--;
 	}
 }
