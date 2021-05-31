@@ -2,6 +2,8 @@ using Sandbox;
 
 partial class DMWeapon : BaseWeapon
 {
+	public float Damage = 100.0f;
+
 	static SoundEvent HitSound = new( "sounds/downmatch/hitmarker.vsnd" )
 	{
 		Volume = 1,
@@ -14,20 +16,14 @@ partial class DMWeapon : BaseWeapon
 
 	public void Shoot(TraceResult tr)
 	{
-		if (IsClient)
-		{
-			var CrPanel = CrosshairPanel as CrosshairPanel;
-			CrPanel.Crosshair.OnEvent("onattack");
-		}
-
 		using (Prediction.Off())
 		{
-			var dmg = DamageInfo.FromBullet( tr.EndPos, tr.Normal, 100 ).
+			var dmg = DamageInfo.FromBullet(tr.EndPos, tr.Normal, Damage).
 				UsingTraceResult(tr).
 				WithAttacker(Owner).
 				WithWeapon(this);
 
-			tr.Entity.TakeDamage( dmg );
+			tr.Entity.TakeDamage(dmg);
 
 			if (IsServer && tr.Entity is Player)
 			{
