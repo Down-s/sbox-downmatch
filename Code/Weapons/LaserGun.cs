@@ -35,12 +35,6 @@ class LaserGun : DMWeapon
 
 			if (Beam == null)
 			{
-				if (IsClient)
-				{
-					var CrPanel = CrosshairPanel as CrosshairPanel;
-					CrPanel.Crosshair.OnEvent("onattack");
-				}
-
 				Beam = Particles.Create( "particles/lasers/laser-beam.vpcf", tr.EndPos );
 				Beam.SetEntityAttachment( 0, EffectEntity, "muzzle", true );
 			}
@@ -49,6 +43,12 @@ class LaserGun : DMWeapon
 
 			if (Time.Now > NextHit)
 			{
+				if (IsClient)
+				{
+					var CrPanel = CrosshairPanel as CrosshairPanel;
+					CrPanel.Crosshair.OnEvent("onattack");
+				}
+
 				PlaySound(ShootSound.Name);
 				Shoot(tr);
 				NextHit = Time.Now + 0.1f;
