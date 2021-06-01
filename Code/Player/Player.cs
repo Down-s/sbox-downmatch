@@ -8,6 +8,11 @@ partial class DownmatchPlayer : Player
 	public float Armor { get; set; } = 100;
 
 	private DamageInfo LastDamage;
+	static SoundEvent KillSound = new( "sounds/downmatch/misc/kill.vsnd" )
+	{
+		Volume = 1,
+		DistanceMax = 500.0f
+	};
 
 	public DownmatchPlayer()
 	{
@@ -47,6 +52,12 @@ partial class DownmatchPlayer : Player
 		SimulateActiveChild( cl, ActiveChild );
 	}
 
+	[ClientRpc]
+	public void OnKilledPlayer()
+	{
+		PlaySound(KillSound.Name);
+	}
+
 	public override void OnKilled()
 	{
 		base.OnKilled();
@@ -55,6 +66,7 @@ partial class DownmatchPlayer : Player
 
 		if (Attacker != null && Attacker != this)
 		{
+			Attacker.OnKilledPlayer();
 			Attacker.Kills++;
 		}
 
@@ -66,6 +78,7 @@ partial class DownmatchPlayer : Player
 		EnableDrawing = false;
 
 		Inventory.DeleteContents();
+		Inventory.DropActive();
 	}
 
 	public override void TakeDamage(DamageInfo dmg)
