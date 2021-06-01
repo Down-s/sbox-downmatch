@@ -33,7 +33,7 @@ public class ScoreUI : Panel
 			if (othercl == Local.Client) continue;
 			DownmatchPlayer otherpl = othercl.Pawn as DownmatchPlayer;
 
-			if (otherpl.Kills > OpposingKills)
+			if (otherpl.IsValid() && otherpl.Kills > OpposingKills)
 			{
 				OpposingKills = otherpl.Kills;
 			}
