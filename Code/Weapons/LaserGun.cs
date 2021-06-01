@@ -12,7 +12,7 @@ class LaserGun : DMWeapon
 		Damage = 20.0f;
 	}
 
-	static SoundEvent ShootSound = new( "sounds/weapons/lasergun/shoot.vsnd" )
+	static SoundEvent ShootSound = new( "sounds/downmatch/weapons/lasergun/attack.vsnd" )
 	{
 		Volume = 0.65f,
 		DistanceMax = 2048.0f
@@ -29,9 +29,16 @@ class LaserGun : DMWeapon
 
 	void CheckLaser()
 	{
+		if (Owner == null || !IsActiveChild())
+		{
+			Beam.Destroy(true);
+			Beam = null;
+			return;
+		}
+
 		if (Owner.Input.Down(InputButton.Attack1))
 		{
-			TraceResult tr = Trace.Ray(Owner.EyePos, Owner.EyePos + (Owner.EyeRot.Forward * 4096)).Radius(5).Ignore(Owner).Run();
+			TraceResult tr = Trace.Ray(Owner.EyePos, Owner.EyePos + (Owner.EyeRot.Forward * 8192)).Radius(5).Ignore(Owner).Run();
 
 			if (Beam == null)
 			{
@@ -62,6 +69,11 @@ class LaserGun : DMWeapon
 				Beam = null;
 			}
 		}
+	}
+
+	public override void OnCarryDrop( Entity dropper )
+	{
+		base.OnCarryDrop(dropper);
 	}
 
 	public override void Simulate(Client pl)
